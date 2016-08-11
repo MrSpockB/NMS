@@ -2,7 +2,7 @@ var webpack = require('webpack');
 var path = require('path');
 
 module.exports = {
-	devtool: 'eval',
+	devtool: 'source-map',
 	entry: [
 	  'webpack-dev-server/client?http://localhost:3000',
 	  'webpack/hot/only-dev-server',
@@ -14,7 +14,8 @@ module.exports = {
   		publicPath: '/static/'
   	},
   	plugins: [
-  	  new webpack.HotModuleReplacementPlugin()
+  	  new webpack.HotModuleReplacementPlugin(),
+  	  new webpack.NoErrorsPlugin()
   	],
   	module:{
   		loaders: [
