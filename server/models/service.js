@@ -10,4 +10,4 @@ var serviceSchema = new Schema({
 
 });
 
-mongoose.model('Proyect', serviceSchema);
+mongoose.model('Service', serviceSchema);
