@@ -14,6 +14,11 @@ module.exports = function()
 		next();
 	});
 	require('../routes/users')(app);
+<<<<<<< HEAD
 	require('../routes/auth')(app);
+=======
+	require('../routes/proyects')(app);
+	require('../routes/services')(app);
+>>>>>>> origin/master
 	return app;
 };
