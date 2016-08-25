@@ -23,7 +23,7 @@ const host = "http://localhost:5000/";
 
 const router = (
 	<Router history={browserHistory}>
-		<Route path="/" component={Login} />
+		<Route path="/" component={Login} host={host} />
 		<Route component={MainLayout} >
 			<Route path="services">
 				<IndexRoute component={viewServices} host={host} />
