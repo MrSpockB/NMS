@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
+import Auth from './../../modules/Auth';
 
 class viewServices extends React.Component
 {
@@ -14,11 +15,16 @@ class viewServices extends React.Component
 	{
 		var host = this.props.route.host;
 		var _this = this;
-		$.get(host+'services', function(result)
-		{
-			_this.setState({
-				services: result
-			});
+		$.ajax({
+			url: host+'services',
+			type: "GET",
+			beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'bearer ' + Auth.getToken())},
+			success: function(res)
+			{
+				_this.setState({
+					services: res
+				});
+			}
 		});
 	}
 	render()
@@ -37,7 +43,7 @@ class viewServices extends React.Component
 					<tbody>
 						{this.state.services.map(function(service){
 							return(
-								<tr key={service.id}>
+								<tr key={service._id}>
 									<td>{service.name}</td>
 									<td>{service.status ? "Activo" : "Desactivado"}</td>
 									<td>

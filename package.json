@@ -4,7 +4,7 @@
   "description": "Node Management System",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "concurrently --kill-others \"node server.js\" \"nodemon apiServer.js\"",
     "dev": "webpack -d --watch",
     "build": "webpack -p",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,8 +15,11 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "jsonwebtoken": "^7.1.9",
     "mongoose": "^4.5.9",
     "morgan": "^1.7.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-router": "^2.4.1",
@@ -28,6 +31,7 @@
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
+    "concurrently": "^2.2.0",
     "css-loader": "^0.23.1",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",

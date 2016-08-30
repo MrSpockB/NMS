@@ -1,8 +1,8 @@
 var services = require('../../server/controllers/serviceController');
 
-module.exports = function(app)
+module.exports = function(router)
 {
-	app.route('/services').post(services.create).get(services.list);
-	app.param('serviceId', services.serviceByID);
-	app.route('/services/:serviceId').delete(services.remove).put(services.update);
+	router.route('/services').post(services.create).get(services.list);
+	router.param('serviceId', services.serviceByID);
+	router.route('/services/:serviceId').delete(services.remove).put(services.update);
 }

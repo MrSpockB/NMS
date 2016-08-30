@@ -1,4 +1,5 @@
 var validator = require('validator');
+var passport = require('passport');
 
 exports.signup = function(req, res, next)
 {
@@ -13,7 +14,17 @@ exports.login = function(req, res, next)
 	let validationResult = validateLoginForm(req.body);
 	if(!validationResult.success)
 		return res.status(400).json({ success: false, message: validationResult.message, errors: validationResult.errors });
-	return res.status(200).end();
+
+
+	passport.authenticate('local-login', function(err, token, userData){
+		if(err)
+		{
+			if(err.name === "CredencialesIncorrectasError")
+				return res.status(400).json({ success: false, message: err.message });
+			return res.status(400).json({ success: false, message: "No se pudo procesar el form" });
+		}
+		return res.json({ success:true, message: "Has podido acceder!", token: token, userData: userData});
+	})(req, res, next);
 }
 
 function validateSignupForm(payload)
@@ -53,6 +64,7 @@ function validateLoginForm(payload)
 	let isFormValid = true;
 	let errors = {};
 	let message = '';
+
 
 	if(!payload.email || payload.email.trim().length === 0)
 	{

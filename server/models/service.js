@@ -5,8 +5,8 @@ var serviceSchema = new Schema({
 	
 	name: String,
 	version: String,
-	status: String,
-	succes: String
+	status: Boolean,
+	success: Boolean
 
 });
 

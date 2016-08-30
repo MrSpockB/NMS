@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM, { render } from 'react-dom';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
+import Auth from './../../modules/Auth';
 
 class Login extends React.Component
 {
@@ -15,10 +16,27 @@ class Login extends React.Component
 	}
 	processForm = (event) => {
 		event.preventDefault();
-		console.log("mail:", this.refs.email.value);
-		console.log("pass:", this.refs.pass.value);
+		let self = this;
 		let data = { email: this.refs.email.value, password: this.refs.pass.value };
-		$.post(this.props.route.host+'login', data );
+		$.post(this.props.route.host+'login', data )
+		.done(function(data)
+		{
+			console.log(data);
+			self.setState({
+				errorMessage: '',
+				errors: {}
+			});
+			Auth.authenticateUser(data.token);
+			browserHistory.push('/services');
+		})
+		.fail(function(data)
+		{
+			console.log(data);
+			self.setState({
+				errorMessage: data.message,
+				errors: data.errors
+			});
+		});
 	}
 	render()
 	{
@@ -46,8 +64,8 @@ class Login extends React.Component
 				    		</div>
 				    		<input type="submit" value="Acceder" className="ui fluid large teal submit button" />
 				    	</div>
-				    	<div className="ui error message"></div>
 				    </form>
+				    {this.state.errorMessage && <p className="ui error message">{this.state.errorMessage}</p>}
 				</div>
 			</div>
 		);
