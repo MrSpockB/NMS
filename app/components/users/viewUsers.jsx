@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
+import Auth from './../../modules/Auth';
 
 class viewUsers extends React.Component
 {
@@ -14,11 +15,20 @@ class viewUsers extends React.Component
 	{
 		var host = this.props.route.host;
 		var _this = this;
-		$.get(host+'users', function(result)
-		{
-			_this.setState({
-				users: result
-			});
+		$.ajax({
+			url: host+'users',
+			method: "GET",
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Authorization': 'bearer ' + Auth.getToken(),
+			},
+			dataType: "json",
+			success: function(res)
+			{
+				_this.setState({
+					users: res
+				});
+			}
 		});
 	}
 	render()
@@ -30,7 +40,7 @@ class viewUsers extends React.Component
 					<thead>
 						<tr>
 							<th>Nombre</th>
-							<th>Teléfono</th>
+							<th>Username</th>
 							<th>Email</th>
 							<th>Modificar</th>
 							<th>Eliminar</th>
@@ -39,9 +49,9 @@ class viewUsers extends React.Component
 					<tbody>
 						{this.state.users.map(function(user){
 							return(
-								<tr key={user.id}>
+								<tr key={user._id}>
 									<td>{user.name}</td>
-									<td>{user.phone}</td>
+									<td>{user.username}</td>
 									<td>{user.email}</td>
 									<td>
 										<Link to={'/users/'+user.id+'/edit'} className="ui icon blue button">

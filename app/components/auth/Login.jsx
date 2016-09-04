@@ -33,8 +33,8 @@ class Login extends React.Component
 		{
 			console.log(data);
 			self.setState({
-				errorMessage: data.message,
-				errors: data.errors
+				errorMessage: data.responseJSON.message,
+				errors: data.responseJSON.errors
 			});
 		});
 	}

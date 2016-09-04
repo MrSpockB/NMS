@@ -6,7 +6,18 @@ exports.signup = function(req, res, next)
 	let validationResult = validateSignupForm(req.body);
 	if(!validationResult.success)
 		return res.status(400).json({ success: false, message: validationResult.message, errors: validationResult.errors });
-	return res.status(200).end();
+	
+	passport.authenticate('local-signup', function(err, info)
+	{
+		if(err)
+		{
+			if(err.name === "MongoError" && err.code === 11000)
+				return res.status(409).json({ success: false, message: "Verifica el formulario.", errors: { email: "Este email ya tiene usuario." } });
+			
+			return res.status(400).json({ success: false, message: "Error al procesar el formulario." });
+		}
+		return res.status(200).json({ success: true, message: 'Usuario creado' });
+	})(req, res, next);
 }
 
 exports.login = function(req, res, next)
@@ -47,6 +58,11 @@ function validateSignupForm(payload)
 	{
 		isFormValid = false;
 		errors.name = "Falta el nombre";
+	}
+	if(!payload.username || payload.username.trim().length === 0)
+	{
+		isFormValid = false;
+		errors.username = "Falta el nombre";
 	}
 	if(!isFormValid)
 	{

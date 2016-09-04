@@ -5,6 +5,7 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import css from './styles/main.less';
 import Login from './components/auth/Login.jsx';
 import MainLayout from './components/MainLayout.jsx';
+import Auth from './modules/Auth';
 
 import viewProjects from './components/projects/viewProjects.jsx';
 import addProject from './components/projects/addProject.jsx';
@@ -38,7 +39,7 @@ const router = (
 			</Route>
 			<Route path="users">
 				<IndexRoute component={viewUsers} host={host} />
-				<Route path="add" component={addUser}/>
+				<Route path="add" component={addUser} host={host}/>
 				<Route path=":id/edit" component={editUser}/>
 			</Route>
 		</Route>

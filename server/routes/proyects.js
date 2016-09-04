@@ -1,4 +1,4 @@
-var proyects = require('../../server/controllers/proyectController');
+var proyects = require('../controllers/proyectController');
 
 module.exports = function(router)
 {

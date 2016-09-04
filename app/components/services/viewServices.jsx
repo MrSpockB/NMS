@@ -17,8 +17,12 @@ class viewServices extends React.Component
 		var _this = this;
 		$.ajax({
 			url: host+'services',
-			type: "GET",
-			beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'bearer ' + Auth.getToken())},
+			method: "GET",
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Authorization': 'bearer ' + Auth.getToken(),
+			},
+			dataType: "json",
 			success: function(res)
 			{
 				_this.setState({
@@ -47,7 +51,7 @@ class viewServices extends React.Component
 									<td>{service.name}</td>
 									<td>{service.status ? "Activo" : "Desactivado"}</td>
 									<td>
-										<Link to={'/services/'+service.id+'/edit'} className="ui icon blue button">
+										<Link to={'/services/'+service._id+'/edit'} className="ui icon blue button">
 											<i className="setting icon"></i>
 										</Link>
 									</td>

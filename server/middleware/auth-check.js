@@ -5,6 +5,9 @@ var jwt = require('jsonwebtoken'),
 	{
 		return function(req, res, next)
 		{
+			if(req.method === "OPTIONS")
+				next();
+
 			if(!req.headers.authorization)
 				return res.status(401).end();
 

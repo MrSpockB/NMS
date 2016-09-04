@@ -1,4 +1,4 @@
-var services = require('../../server/controllers/serviceController');
+var services = require('../controllers/serviceController');
 
 module.exports = function(router)
 {
