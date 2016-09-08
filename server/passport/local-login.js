@@ -22,7 +22,7 @@ module.exports = function(config)
 				return done(err);
 			if(!user)
 			{
-				let error = new Error("Email o contraseña incorrecta");
+				var error = new Error("Email o contraseña incorrecta");
 				error.name = "CredencialesIncorrectasError";
 				return done(error);
 			}
@@ -31,16 +31,16 @@ module.exports = function(config)
 					return done(err);
 				if(!isMatch)
 				{
-					let error = new Error("Email o contraseña incorrecta");
+					var error = new Error("Email o contraseña incorrecta");
 					error.name = "CredencialesIncorrectasError";
 					return done(error);
 				}
-				let payload = 
+				var payload = 
 				{
 					sub: user._id,
 				};
-				let token = jwt.sign(payload, config.jwtSecret);
-				let userData = {
+				var token = jwt.sign(payload, config.jwtSecret);
+				var userData = {
 					name: user.name
 				};
 				return done(null, token, userData);

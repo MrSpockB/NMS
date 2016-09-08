@@ -3,7 +3,7 @@ var passport = require('passport');
 
 exports.signup = function(req, res, next)
 {
-	let validationResult = validateSignupForm(req.body);
+	var validationResult = validateSignupForm(req.body);
 	if(!validationResult.success)
 		return res.status(400).json({ success: false, message: validationResult.message, errors: validationResult.errors });
 	
@@ -22,7 +22,7 @@ exports.signup = function(req, res, next)
 
 exports.login = function(req, res, next)
 {
-	let validationResult = validateLoginForm(req.body);
+	var validationResult = validateLoginForm(req.body);
 	if(!validationResult.success)
 		return res.status(400).json({ success: false, message: validationResult.message, errors: validationResult.errors });
 
@@ -40,9 +40,9 @@ exports.login = function(req, res, next)
 
 function validateSignupForm(payload)
 {
-	let isFormValid = true;
-	let errors = {};
-	let message = '';
+	var isFormValid = true;
+	var errors = {};
+	var message = '';
 
 	if(!payload.email || !validator.isEmail(payload.email))
 	{
@@ -77,9 +77,9 @@ function validateSignupForm(payload)
 
 function validateLoginForm(payload)
 {
-	let isFormValid = true;
-	let errors = {};
-	let message = '';
+	var isFormValid = true;
+	var errors = {};
+	var message = '';
 
 
 	if(!payload.email || payload.email.trim().length === 0)

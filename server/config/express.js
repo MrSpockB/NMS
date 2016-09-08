@@ -25,7 +25,7 @@ module.exports = function()
 	require('./../passport')(passport);
 	require('../routes/auth')(app);
 	require('../routes/commands')(app);
-	//apiRouter.use(authMiddleware);
+	apiRouter.use(authMiddleware);
 	require('../routes/users')(apiRouter);
 	require('../routes/proyects')(apiRouter);
 	require('../routes/services')(apiRouter);

@@ -1,9 +1,9 @@
-const spawn = require('child_process').spawn;
+var spawn = require('child_process').spawn;
 
 
 exports.test = function(req, res, next)
 {
-	const ls = spawn('node',['-v']);
+	var ls = spawn('node',['-v']);
 	var result = '';
 	ls.stdout.on('data', (data) => {
 		result += data.toString();
