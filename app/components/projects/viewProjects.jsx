@@ -41,7 +41,7 @@ class viewProjects extends React.Component
 							return(
 								<tr key={project.id}>
 									<td>{project.name}</td>
-									<td>{project.user}</td>
+									<td>{project.programer}</td>
 									<td>{project.language}</td>
 									<td>
 										<Link to={'/projects/'+project.id+'/edit'} className="ui icon teal button">
