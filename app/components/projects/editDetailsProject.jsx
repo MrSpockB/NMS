@@ -17,7 +17,7 @@ class editDetailsProject extends React.Component
 		var host = this.props.route.host;
 		var _this = this;
 		$.ajax({
-			url: host+'proyects'+this.props.params.id,
+			url: host+'proyects/'+this.props.params.id,
 			method: "GET",
 			headers: {
 				'Content-type': 'application/x-www-form-urlencoded',
