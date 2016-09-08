@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
+import Auth from './../../modules/Auth';
 
 class viewProjects extends React.Component
 {
@@ -54,12 +55,12 @@ class viewProjects extends React.Component
 									<td>{project.programer}</td>
 									<td>{project.language}</td>
 									<td>
-										<Link to={'/projects/'+project.id+'/edit'} className="ui icon teal button">
+										<Link to={'/projects/'+project._id+'/edit'} className="ui icon teal button">
 											<i className="setting icon"></i>
 										</Link>
 									</td>
 									<td>
-										<Link to={'/projects/'+project.id+'/run'} className="ui icon blue button">
+										<Link to={'/projects/'+project._id+'/run'} className="ui icon blue button">
 											<i className="setting icon"></i>
 										</Link>
 									</td>

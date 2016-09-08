@@ -18,14 +18,14 @@ module.exports = function()
 	{
 		res.setHeader('Access-Control-Allow-Origin', '*');
 		res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-		res.setHeader('Access-Control-Allow-Headers', 'X-Request-With, Content-type, Authorization');
+		res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, X-Requested-With, Session, Authorization');
 		next();
 	});
 	
 	require('./../passport')(passport);
 	require('../routes/auth')(app);
 	require('../routes/commands')(app);
-	apiRouter.use(authMiddleware);
+	//apiRouter.use(authMiddleware);
 	require('../routes/users')(apiRouter);
 	require('../routes/proyects')(apiRouter);
 	require('../routes/services')(apiRouter);

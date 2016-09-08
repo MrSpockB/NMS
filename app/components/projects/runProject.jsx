@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { findDOMNode } from 'react-dom';
+import Auth from './../../modules/Auth';
 
 class runProject extends React.Component
 {
@@ -9,12 +10,32 @@ class runProject extends React.Component
 		super(props);
 		this.state = {
 			packages: [],
+			devPackages: [],
 			searchResult: []
 		}
 	}
 	componentDidMount()
 	{
+		var host = this.props.route.host;
+		var _this = this;
+		var id = this.props.params.id;
 		$('.menu .item').tab();
+		$.ajax({
+			url: host+'proyects/'+id+'/packages',
+			method: "GET",
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Authorization': 'bearer ' + Auth.getToken(),
+			},
+			dataType: "json",
+			success: function(res)
+			{
+				_this.setState({
+					packages: res["deps"],
+					devPackages: res["devDeps"]
+				});
+			}
+		});
 	}
 	searchPackage(event)
 	{
@@ -44,13 +65,13 @@ class runProject extends React.Component
 				  	</form>
 				</div>
 				<div className="ui bottom attached tab segment" data-tab="second">
-				  	<table className="ui celled table">
+					<h3>Dependencias de Aplicación</h3>
+				  	<table className="ui celled compact table">
 				  		<thead>
 				  			<tr>
 				  				<th>Nombre</th>
-				  				<th>Descripcion</th>
 				  				<th>Versión</th>
-				  				<th>Instalar</th>
+				  				<th>Desinstalar</th>
 				  			</tr>
 				  		</thead>
 				  		<tbody>
@@ -58,11 +79,36 @@ class runProject extends React.Component
 				  				return(
 				  					<tr>
 				  						<td>{pkg.name}</td>
-				  						<td>{pkg.desc}</td>
-				  						<td>{pkg.ver}</td>
+				  						<td>{pkg.version}</td>
 				  						<td>
-				  							<button className="ui icon green button">
-				  								<i className="checkmark icon"></i>
+				  							<button className="ui icon red button">
+				  								<i className="remove icon"></i>
+				  							</button>
+				  						</td>
+				  					</tr>
+				  				);
+				  			})}
+				  		</tbody>
+				  	</table>
+				  	<hr/>
+				  	<h3>Dependencias de Desarrollador</h3>
+				  	<table className="ui celled compact table">
+				  		<thead>
+				  			<tr>
+				  				<th>Nombre</th>
+				  				<th>Versión</th>
+				  				<th>Desinstalar</th>
+				  			</tr>
+				  		</thead>
+				  		<tbody>
+				  			{this.state.devPackages.map(function(pkg){
+				  				return(
+				  					<tr>
+				  						<td>{pkg.name}</td>
+				  						<td>{pkg.version}</td>
+				  						<td>
+				  							<button className="ui icon red button">
+				  								<i className="remove icon"></i>
 				  							</button>
 				  						</td>
 				  					</tr>
