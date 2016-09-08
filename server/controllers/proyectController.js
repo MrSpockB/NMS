@@ -27,6 +27,10 @@ exports.remove= function (req, res, next) {
             res.json(req.proyect);
     }) 
 };
+exports.read = function(req, res)
+{
+	res.json(req.proyect);
+};
 
 exports.list= function(req, res, next) {
 	Proyect.find({}, function(err, proyect) {

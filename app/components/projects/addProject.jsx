@@ -2,6 +2,45 @@ import React from 'react';
 
 class addProject extends React.Component
 {
+	constructor()
+	{
+		super();
+		this.state =
+		{
+			successMessage: '',
+			errorMessage: '',
+			errors: {}
+		};
+	}
+
+	processForm = (event) => {
+		var host = this.props.route.host;
+		var _this = this;
+		$.ajax({
+			url: host+'proyects',
+			method: "POST",
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Authorization': 'bearer ' + Auth.getToken(),
+			},
+			data:{
+				name: _this.refs.nombre.value,
+				language: _this.refs.lenguaje.value,
+				programer: _this.refs.programer.value
+			},
+			dataType: "json",
+			success: function(res)
+			{
+				_this.setState({
+					successMessage: res
+				});
+				_this.refs.name.reset();
+				_this.refs.programer.reset();
+				_this.refs.language.reset();			
+			}
+		});
+	}
+
 	render()
 	{
 		return (
@@ -22,7 +61,7 @@ class addProject extends React.Component
 					</div>
 					<div className="field">
 						<label>Programador asignado</label>
-						<select name="usuario" className="ui dropdown">
+						<select name="programer" className="ui dropdown">
 							<option value="0">Juanito</option>
 							<option value="1">Vladimir</option>
 							<option value="2">Pepesqui</option>
