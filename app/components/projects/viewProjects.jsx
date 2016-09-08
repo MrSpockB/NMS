@@ -14,11 +14,21 @@ class viewProjects extends React.Component
 	{
 		var host = this.props.route.host;
 		var _this = this;
-		$.get(host+'proyects', function(result)
-		{
-			_this.setState({
-				projects: result
-			});
+		$.ajax({
+			url: host+'proyects',
+			method: "GET",
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Authorization': 'bearer ' + Auth.getToken(),
+			},
+			dataType: "json",
+			success: function(res)
+			{
+				_this.setState({
+					projects: res
+				});
+						
+			}
 		});
 	}
 	render()

@@ -16,43 +16,48 @@ class editDetailsProject extends React.Component
 	{
 		var host = this.props.route.host;
 		var _this = this;
-		$.get(host+'proyects/'+this.props.params.id, function(result)
-		{
-			_this.setState({
-				project: result
-			});
+		$.ajax({
+			url: host+'proyects'+this.props.params.id,
+			method: "GET",
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Authorization': 'bearer ' + Auth.getToken(),
+			},
+			dataType: "json",
+			success: function(res)
+			{
+				_this.setState({
+					project: res
+				});			
+			}
 		});
 	}
 	processForm = (event) => {
-		event.preventDefault();
-		let self = this;
-		let data = {
-			name: this.refs.nombre.value,
-			language: this.refs.lenguaje.value,
-			programer: this.refs.programer.value
-
-			
-		};
-		$.put(this.props.route.host+'proyects'+"/"+this.state.project.id, data )
-			.done(function(data)
+		var host = this.props.route.host;
+		var _this = this;
+		$.ajax({
+			url: host+'proyects/'+_this.state.project.id,
+			method: "PUT",
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Authorization': 'bearer ' + Auth.getToken(),
+			},
+			data:{
+				name: _this.refs.nombre.value,
+				language: _this.refs.lenguaje.value,
+				programer: _this.refs.programer.value
+			},
+			dataType: "json",
+			success: function(res)
 			{
-				console.log(data);
-				self.setState({
-					successMessage: data.message
+				_this.setState({
+					successMessage: res
 				});
-				this.refs.name.reset();
-				this.refs.programer.reset();
-				this.refs.language.reset();
-
-			})
-			.fail(function(data)
-			{
-				console.log(data);
-				self.setState({
-					errorMessage: data.responseJSON.message,
-					errors: data.responseJSON.errors
-				});
-			});
+				_this.refs.name.reset();
+				_this.refs.programer.reset();
+				_this.refs.language.reset();			
+			}
+		});
 	}
 	render()
 	{
