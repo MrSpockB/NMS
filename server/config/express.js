@@ -1,6 +1,7 @@
 var config = require('./config'),
 	express = require('express'),
 	passport = require('passport'),
+	switchyard = require('switchyard'),
 	bodyParser = require('body-parser');
 module.exports = function()
 {
@@ -24,11 +25,12 @@ module.exports = function()
 	
 	require('./../passport')(passport);
 	require('../routes/auth')(app);
-	require('../routes/commands')(app);
-	apiRouter.use(authMiddleware);
-	require('../routes/users')(apiRouter);
-	require('../routes/proyects')(apiRouter);
-	require('../routes/services')(apiRouter);
+	//require('../routes/commands')(app);
+	//apiRouter.use(authMiddleware);
+	switchyard(apiRouter, __dirname+'./../controllers');
+	//require('../routes/users')(apiRouter);
+	//require('../routes/proyects')(apiRouter);
+	//require('../routes/services')(apiRouter);
 	app.use('/', apiRouter);
 	return app;
 };

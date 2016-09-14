@@ -33,7 +33,7 @@ const router = (
 			</Route>
 			<Route path="projects">
 				<IndexRoute component={viewProjects} host={host} />
-				<Route path="add" component={addProject}/>
+				<Route path="add" component={addProject} host={host} />
 				<Route path=":id/edit" component={editDetailsProject} host={host} />
 				<Route path=":id/run" component={runProject} host={host} />
 			</Route>

@@ -21,7 +21,7 @@ class runProject extends React.Component
 		var id = this.props.params.id;
 		$('.menu .item').tab();
 		$.ajax({
-			url: host+'proyects/'+id+'/packages',
+			url: host+'proyects/view/'+id+'/packages',
 			method: "GET",
 			headers: {
 				'Content-type': 'application/x-www-form-urlencoded',

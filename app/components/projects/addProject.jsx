@@ -1,4 +1,6 @@
 import React from 'react';
+import { Treebeard } from 'react-treebeard';
+import Auth from './../../modules/Auth';
 
 class addProject extends React.Component
 {
@@ -9,11 +11,46 @@ class addProject extends React.Component
 		{
 			successMessage: '',
 			errorMessage: '',
-			errors: {}
+			errors: {},
+			rootStruct: {},
+			cursor: {}
 		};
 	}
-
-	processForm = (event) => {
+	componentDidMount()
+	{
+		var host = this.props.route.host;
+		var _this = this;
+		$.ajax({
+			url: host+'commands/root/',
+			method: "GET",
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Authorization': 'bearer ' + Auth.getToken(),
+			},
+			dataType: "json",
+			success: function(res)
+			{
+				_this.setState({
+					rootStruct: res
+				});
+			}
+		});
+	}
+	onToggle = (node, toggled) =>
+	{
+		if(this.state.cursor)
+		{
+			this.state.cursor.active = false;
+		}
+		node.active = true;
+		if(node.children)
+		{
+			node.toggled = toggled;
+		}
+		this.setState({ cursor: node });
+	}
+	processForm = (event) => 
+	{
 		var host = this.props.route.host;
 		var _this = this;
 		$.ajax({
@@ -67,6 +104,7 @@ class addProject extends React.Component
 							<option value="2">Pepesqui</option>
 						</select>
 					</div>
+					<Treebeard data={this.state.rootStruct} onToggle={this.onToggle}/>
 					<button className="ui green button" type="submit">Guardar</button>
 				</form>
 			</div>
