@@ -13,7 +13,10 @@ class addProject extends React.Component
 			errorMessage: '',
 			errors: {},
 			rootStruct: {},
-			cursor: {}
+			cursor: {},
+			tempLang: '',
+			tempProg: '',
+			users : []
 		};
 	}
 	componentDidMount()
@@ -35,6 +38,21 @@ class addProject extends React.Component
 				});
 			}
 		});
+		$.ajax({
+			url: host+'users',
+			method: "GET",
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Authorization': 'bearer ' + Auth.getToken(),
+			},
+			dataType: "json",
+			success: function(res)
+			{
+				_this.setState({
+					users: res
+				});
+			}
+		});
 	}
 	onToggle = (node, toggled) =>
 	{
@@ -51,8 +69,15 @@ class addProject extends React.Component
 	}
 	processForm = (event) => 
 	{
+		event.preventDefault();
 		var host = this.props.route.host;
 		var _this = this;
+		var data = {
+			name: this.refs.nombre.value,
+			language: this.state.tempLang,
+			username: this.state.tempProg,
+			route: this.state.cursor.path
+		};
 		$.ajax({
 			url: host+'proyects',
 			method: "POST",
@@ -60,11 +85,7 @@ class addProject extends React.Component
 				'Content-type': 'application/x-www-form-urlencoded',
 				'Authorization': 'bearer ' + Auth.getToken(),
 			},
-			data:{
-				name: _this.refs.nombre.value,
-				language: _this.refs.lenguaje.value,
-				programer: _this.refs.programer.value
-			},
+			data: data,
 			dataType: "json",
 			success: function(res)
 			{
@@ -72,36 +93,45 @@ class addProject extends React.Component
 					successMessage: res
 				});
 				_this.refs.name.reset();
-				_this.refs.programer.reset();
+				_this.refs.username.reset();
 				_this.refs.language.reset();			
 			}
 		});
 	}
-
+	updateLang = (e) =>
+	{
+		this.setState({ tempLang: e.target.value });
+	}
+	updateProg = (e) =>
+	{
+		this.setState({ tempProg: e.target.value });
+	}
 	render()
 	{
 		return (
 			<div className="ui segment">
 				<h1>Agregar Proyecto</h1>
-				<form action="" className="ui form">
+				<form action="" className="ui form" onSubmit={this.processForm}>
 					<div className="field">
 						<label>Nombre</label>
-						<input type="text" name="nombre"/>
+						<input type="text" name="nombre" ref="nombre" />
 					</div>
 					<div className="field">
 						<label>Lenguaje</label>
-						<select name="lenguaje" className="ui dropdown">
-							<option value="0">PHP</option>
-							<option value="1">Javascript</option>
-							<option value="2">Ruby</option>
+						<select name="lenguaje" value={this.state.tempLang} onChange={this.updateLang} className="ui dropdown">
+							<option value="PHP">PHP</option>
+							<option value="Javascript">Javascript</option>
+							<option value="Ruby">Ruby</option>
 						</select>
 					</div>
 					<div className="field">
 						<label>Programador asignado</label>
-						<select name="programer" className="ui dropdown">
-							<option value="0">Juanito</option>
-							<option value="1">Vladimir</option>
-							<option value="2">Pepesqui</option>
+						<select name="username" value={this.state.tempProg} onChange={this.updateProg} className="ui dropdown">
+							{this.state.users.map(function(user){
+								return (
+									<option value={user.username}>{user.name}</option>
+								);
+							})}
 						</select>
 					</div>
 					<Treebeard data={this.state.rootStruct} onToggle={this.onToggle}/>

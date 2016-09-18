@@ -6,7 +6,8 @@ module.exports = {
 	{
 		get: function(req, res, next)
 		{
-			Proyect.find({}, function(err, proyects)
+			console.log(res.username);
+			Proyect.find({username: res.username}, function(err, proyects)
 			{
 				if(err)
 					return next(err);
@@ -115,10 +116,4 @@ module.exports = {
 			});
 		}
 	}
-};
-
-
-exports.packages = function(req, res, next)
-{
-	
 };

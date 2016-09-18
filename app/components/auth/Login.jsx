@@ -18,7 +18,7 @@ class Login extends React.Component
 		event.preventDefault();
 		let self = this;
 		let data = { email: this.refs.email.value, password: this.refs.pass.value };
-		$.post(this.props.route.host+'login', data )
+		$.post('http://localhost:5000/login', data )
 		.done(function(data)
 		{
 			console.log(data);

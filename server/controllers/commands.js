@@ -44,7 +44,7 @@ function dirTree(filename)
     if (stats.isDirectory()) {
         info.type = "folder";
         info.children = fs.readdirSync(filename).map(function(child) {
-            return dirTree(filename + '/' + child);
+            return dirTree(filename + '\\' + child);
         });
     } else {
         info.type = "file";

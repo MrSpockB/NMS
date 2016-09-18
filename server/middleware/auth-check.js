@@ -22,7 +22,7 @@ var jwt = require('jsonwebtoken'),
 					if (err || !user) {
 						return res.status(401).end();
 					}
-
+					res.username = user.username;
 					return next();
 
 				});

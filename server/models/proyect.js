@@ -5,7 +5,7 @@ var proyectSchema = new Schema({
 	
 	name: String,
 	language: String,
-	programer: String,
+	username: String,
 	route: String
 
 });

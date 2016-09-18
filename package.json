@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently --kill-others \"node server.js\" \"nodemon apiServer.js\"",
-    "dev": "webpack -d --watch",
-    "build": "webpack -p",
+    "prod": "nodemon apiServer.js",
+    "dev": "webpack -p --watch --config webpack.config.prod.js",
+    "build": "NODE_ENV=production webpack --config webpack.config.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "José Francisco",

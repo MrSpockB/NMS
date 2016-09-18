@@ -20,11 +20,11 @@ import viewUsers from './components/users/viewUsers.jsx';
 import addUser from './components/users/addUser.jsx';
 import editUser from './components/users/editUser.jsx';
 
-const host = "http://localhost:5000/";
+const host = "http://localhost:5000/api/";
 
 const router = (
 	<Router history={browserHistory}>
-		<Route path="/" component={Login} host={host} />
+		<Route path="/" component={Login} />
 		<Route component={MainLayout} >
 			<Route path="services">
 				<IndexRoute component={viewServices} host={host} />
