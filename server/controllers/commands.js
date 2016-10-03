@@ -31,6 +31,32 @@ module.exports =
 		{
 			res.json(dirTree(config.rootPath));
 		}
+	},
+	makedir:
+	{
+		post: function(req, res, next)
+		{
+			console.log(req.body.directory);
+			var success, message;
+			fs.mkdir(config.rootPath+'\\'+req.body.directory, 0777, function(err)
+			{
+				if(err)
+				{
+					success = false;
+					message = err.code;
+					if(err.code == 'EEXIST')
+					{
+						message = "La carpeta ya existe";
+					}
+				}
+				else
+				{
+					success = true;
+					message = "Se creo la carpeta";
+				}
+				res.json({success: success, msg: message});
+			})
+		}
 	}
 }
 function dirTree(filename) 

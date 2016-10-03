@@ -37,9 +37,30 @@ class runProject extends React.Component
 			}
 		});
 	}
-	searchPackage(event)
-	{
+	installPackage = (event) => {
 		event.preventDefault();
+		var pkg = this.refs.pkgToSearch.value;
+		var host = this.props.route.host;
+		var id = this.props.params.id;
+		var _this = this;
+		console.log(pkg);
+		$.ajax({
+			url: host+'proyects/view/'+id+'/packages',
+			data: {package: pkg },
+			method: "POST",
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Authorization': 'bearer ' + Auth.getToken(),
+			},
+			dataType: "json",
+			success: function(res)
+			{
+				if(res.success)
+				{
+					console.log(res);
+				}
+			}
+		});
 	}
 	render()
 	{
@@ -121,43 +142,11 @@ class runProject extends React.Component
 					<form action="" className="ui form">
 						<div className="fields">
 							<div className="ten wide field">
-								<input type="text" placeholder="Servicio a Instalar" ref="pkgToSearch" />
+								<input type="text" placeholder="Paquete a Instalar" ref="pkgToSearch" />
 							</div>
-							<input className="ui blue button" type="submit" value="Buscar" onClick={this.searchPackage.bind(this)}/>
+							<input className="ui blue button" type="submit" value="Instalar" onClick={this.installPackage}/>
 						</div>
 					</form>
-					<table className="ui celled table">
-						<thead>
-							<tr>
-								<th>Nombre</th>
-								<th>Descripcion</th>
-								<th>Versión</th>
-								<th>Instalar</th>
-							</tr>
-						</thead>
-						<tbody>
-							{this.state.searchResult.map(function(pkg){
-								return(
-									<tr>
-										<td>{pkg.name}</td>
-										<td>{pkg.desc}</td>
-										<td>{pkg.ver}</td>
-										<td>
-											<button className="ui icon green button">
-												<i className="checkmark icon"></i>
-											</button>
-										</td>
-									</tr>
-								);
-							})}
-						</tbody>
-					</table>
-				</div>
-				<div className="ui bottom attached tab segment" data-tab="fourth">
-				  	<button className="ui red labeled icon button">
-				  		<i className="remove icon"></i>
-				  		Eliminar Proyecto
-				  	</button>
 				</div>
 			</div>
 		);

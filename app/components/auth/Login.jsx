@@ -18,7 +18,12 @@ class Login extends React.Component
 		event.preventDefault();
 		let self = this;
 		let data = { email: this.refs.email.value, password: this.refs.pass.value };
-		$.post('http://localhost:5000/login', data )
+		$.ajax({
+			url: 'login',
+			method: 'POST',
+			data: data,
+			timeout: 15000
+		})
 		.done(function(data)
 		{
 			console.log(data);

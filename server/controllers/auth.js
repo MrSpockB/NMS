@@ -25,8 +25,6 @@ exports.login = function(req, res, next)
 	var validationResult = validateLoginForm(req.body);
 	if(!validationResult.success)
 		return res.status(400).json({ success: false, message: validationResult.message, errors: validationResult.errors });
-
-
 	passport.authenticate('local-login', function(err, token, userData){
 		if(err)
 		{

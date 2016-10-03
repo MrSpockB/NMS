@@ -1,5 +1,6 @@
 import React from 'react';
 import { Treebeard } from 'react-treebeard';
+import { browserHistory } from 'react-router';
 import Auth from './../../modules/Auth';
 
 class addProject extends React.Component
@@ -19,7 +20,7 @@ class addProject extends React.Component
 			users : []
 		};
 	}
-	componentDidMount()
+	fetchRootDirectory = () =>
 	{
 		var host = this.props.route.host;
 		var _this = this;
@@ -38,6 +39,12 @@ class addProject extends React.Component
 				});
 			}
 		});
+	}
+	componentDidMount()
+	{
+		var host = this.props.route.host;
+		var _this = this;
+		this.fetchRootDirectory();
 		$.ajax({
 			url: host+'users',
 			method: "GET",
@@ -92,9 +99,7 @@ class addProject extends React.Component
 				_this.setState({
 					successMessage: res
 				});
-				_this.refs.name.reset();
-				_this.refs.username.reset();
-				_this.refs.language.reset();			
+				browserHistory.push('/projects');
 			}
 		});
 	}
@@ -105,6 +110,31 @@ class addProject extends React.Component
 	updateProg = (e) =>
 	{
 		this.setState({ tempProg: e.target.value });
+	}
+	createDirectory = (event) => 
+	{
+		event.preventDefault();
+		var direc = this.refs.carpeta.value;
+		var host = this.props.route.host;
+		var _this = this;
+		console.log(direc);
+		$.ajax({
+			url: host+'commands/makedir/',
+			data: {directory: direc },
+			method: "POST",
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Authorization': 'bearer ' + Auth.getToken(),
+			},
+			dataType: "json",
+			success: function(res)
+			{
+				if(res.success)
+				{
+					_this.fetchRootDirectory();
+				}
+			}
+		});
 	}
 	render()
 	{
@@ -135,6 +165,16 @@ class addProject extends React.Component
 						</select>
 					</div>
 					<Treebeard data={this.state.rootStruct} onToggle={this.onToggle}/>
+					<hr/>
+					<div className="inline fields">
+						<div className="eight wide field">
+						      <label>Crear Carpeta</label>
+						      <input type="text" name="carpeta" ref="carpeta"/>
+						</div>
+						<button className="ui primary button" onClick={this.createDirectory}>
+						  Crear Carpeta
+						</button>
+					</div>
 					<button className="ui green button" type="submit">Guardar</button>
 				</form>
 			</div>

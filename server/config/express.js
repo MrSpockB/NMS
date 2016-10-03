@@ -39,6 +39,9 @@ module.exports = function()
 	apiRouter.use(authMiddleware);
 	switchyard(apiRouter, __dirname+'/./../controllers');
 	app.use('/api', apiRouter);
+	app.get('*', function(req, res, next){
+		res.sendFile(path.resolve(__dirname+'/../static/index.html'));
+	})
 	
 	return app;
 };

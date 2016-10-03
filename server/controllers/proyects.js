@@ -1,12 +1,12 @@
 var Proyect = require('mongoose').model('Proyect');
 var fs = require('fs'), obj;
+var spawn = require('child_process').spawn;
 
 module.exports = {
 	index: 
 	{
 		get: function(req, res, next)
 		{
-			console.log(res.username);
 			Proyect.find({username: res.username}, function(err, proyects)
 			{
 				if(err)
@@ -23,7 +23,21 @@ module.exports = {
 				if(err)
 					return next(err);
 				else
-					res.json(proyect);
+				{
+					var npm = spawn('npm',['init', '-y'], {cwd: proyect.route,  shell: true});
+					var result = '';
+					npm.stdout.on('data', (data) => {
+						result += data.toString();
+					});
+					npm.on('close', (code) => {
+						//console.log(result);
+						res.json(proyect);
+					  	console.log(`child process exited with code ${code}`);
+					})
+					npm.on('error', function(err){
+						throw err;
+					})
+				}
 			});
 		}
 	},
@@ -87,7 +101,6 @@ module.exports = {
 					next(err);
 				else
 				{
-					console.log(proyect.route);
 					var finalData = {};
 					var deps = [];
 					var devDeps = [];
@@ -114,6 +127,32 @@ module.exports = {
 					});
 				}
 			});
+		},
+		post: function(req, res, next)
+		{
+			Proyect.findOne({
+				_id: req.params.proyectId
+			},
+			function(err, proyect)
+			{
+				var result = "";
+				var npm = spawn('npm',['install', req.body.package, '--save'], {cwd: proyect.route,  shell: true});
+				npm.stdout.on('data', (data) => {
+					result += data.toString();
+				});
+				npm.on('close', (code) => {
+					console.log(result);
+					res.json({success: true});
+				  	console.log(`child process exited with code ${code}`);
+				});
+				npm.on('error', function(err){
+					res.json({success: false, err: err.message});
+				});
+			});
 		}
+	},
+	"view/:proyectId/run":
+	{
+		
 	}
 };
