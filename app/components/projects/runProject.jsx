@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { findDOMNode } from 'react-dom';
 import Auth from './../../modules/Auth';
+import { Treebeard } from 'react-treebeard';
 
 class runProject extends React.Component
 {
@@ -11,7 +12,11 @@ class runProject extends React.Component
 		this.state = {
 			packages: [],
 			devPackages: [],
-			searchResult: []
+			searchResult: [],
+			folderStruct: {},
+			cursor: {},
+			port: 3000,
+			output: []
 		}
 	}
 	componentDidMount()
@@ -36,6 +41,39 @@ class runProject extends React.Component
 				});
 			}
 		});
+		$.ajax({
+			url: host+'proyects/view/'+id+'/folder',
+			method: "GET",
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Authorization': 'bearer ' + Auth.getToken(),
+			},
+			dataType: "json",
+			success: function(res)
+			{
+				_this.setState({
+					folderStruct: res
+				});
+			}
+		});
+		this.socket = io.connect('http://localhost:5000');
+		this.socket.on('shellOutput', function(outputData)
+		{
+			_this.setState({ouput: _this.state.output.push(outputData)});
+		})
+	}
+	onToggle = (node, toggled) =>
+	{
+		if(this.state.cursor)
+		{
+			this.state.cursor.active = false;
+		}
+		node.active = true;
+		if(node.children)
+		{
+			node.toggled = toggled;
+		}
+		this.setState({ cursor: node });
 	}
 	installPackage = (event) => {
 		event.preventDefault();
@@ -62,6 +100,17 @@ class runProject extends React.Component
 			}
 		});
 	}
+	sendEventRun = (event) =>
+	{
+		event.preventDefault();
+		var data = {id: this.props.params.id, name: this.state.cursor.name}
+		this.socket.emit('runProject', data);
+	}
+	sendEventStop = (event) =>
+	{
+		event.preventDefault();
+		this.socket.emit('stopProject');
+	}
 	render()
 	{
 		return(
@@ -76,14 +125,28 @@ class runProject extends React.Component
 				<div className="ui bottom attached tab segment active" data-tab="first">
 				  	<form className="ui form">
 				  		<div className="inline field">
-				  			<button className="ui green labeled icon button">
+				  			<button className="ui green labeled icon button" onClick={this.sendEventRun}>
 				  				<i className="rocket icon"></i>
 				  				Ejecutar Proyecto
 				  			</button>
+				  			<button className="ui red labeled icon button" onClick={this.sendEventStop}>
+				  				<i className="remove icon"></i>
+				  				Detener Proyecto
+				  			</button>
 					  	    <label>Se ejecutara en el puerto: </label>
-					  	    <input type="number" placeholder="3000" />
+					  	    <input type="number" placeholder="3000" value={this.state.port} />
 				  	  	</div>
 				  	</form>
+				  	<hr/>
+					<Treebeard data={this.state.folderStruct} onToggle={this.onToggle}/>
+					<hr/>
+					<ul id="shellOutput">
+						{this.state.output.map(function(line){
+							return(
+								<li>{line}</li>
+							);
+						})}
+					</ul>
 				</div>
 				<div className="ui bottom attached tab segment" data-tab="second">
 					<h3>Dependencias de Aplicación</h3>

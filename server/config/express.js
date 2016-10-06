@@ -8,6 +8,8 @@ var config = require('./config'),
 module.exports = function()
 {
 	var app = express();
+	var server = app.listen(config.socketPort)
+	var io = require('socket.io')(server);
 	var apiRouter = express.Router();
 	var authMiddleware = require('./../middleware/auth-check')(config);
 
@@ -36,6 +38,7 @@ module.exports = function()
 	
 	require('./../passport')(passport);
 	require('../routes/auth')(app);
+	require('../controllers/runRealTime')(io);
 	apiRouter.use(authMiddleware);
 	switchyard(apiRouter, __dirname+'/./../controllers');
 	app.use('/api', apiRouter);
