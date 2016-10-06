@@ -20,7 +20,7 @@ import viewUsers from './components/users/viewUsers.jsx';
 import addUser from './components/users/addUser.jsx';
 import editUser from './components/users/editUser.jsx';
 
-const host = "http://localhost:5000/api/";
+const host = "http://localhost/api/";
 
 const router = (
 	<Router history={browserHistory}>

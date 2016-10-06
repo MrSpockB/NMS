@@ -1,5 +1,6 @@
 var Proyect = require('mongoose').model('Proyect');
 var fs = require('fs'), obj;
+var path = require('path');
 var spawn = require('child_process').spawn;
 
 module.exports = {
@@ -151,8 +152,37 @@ module.exports = {
 			});
 		}
 	},
-	"view/:proyectId/run":
+	"view/:proyectId/folder":
 	{
-		
+		get: function(req, res, next)
+		{
+			Proyect.findOne({
+				_id: req.params.proyectId
+			},
+			function(err, proyect)
+			{
+				res.json(dirTree(proyect.route, 1));
+			});
+		}
 	}
 };
+
+function dirTree(filename, level) 
+{
+    var stats = fs.lstatSync(filename),
+        info = {
+            path: filename,
+            name: path.basename(filename)
+        };
+
+    if (stats.isDirectory() && level > 0) {
+        info.type = "folder";
+        info.children = fs.readdirSync(filename).map(function(child) {
+            return dirTree(filename + '\\' + child, level-1);
+        });
+    } else {
+        info.type = "file";
+    }
+
+    return info;
+}
