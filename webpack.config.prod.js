@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
+var WebpackNotifierPlugin = require('webpack-notifier');
 
 module.exports = {
         devtool: 'source-map',
@@ -19,7 +20,8 @@ module.exports = {
                         compressor: {
                                 warnings: false
                         }
-                })
+                }),
+                new WebpackNotifierPlugin()
         ],
         module:
         {

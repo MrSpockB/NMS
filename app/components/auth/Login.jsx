@@ -18,6 +18,7 @@ class Login extends React.Component
 		event.preventDefault();
 		let self = this;
 		let data = { email: this.refs.email.value, password: this.refs.pass.value };
+		$('#overlay').addClass('active');
 		$.ajax({
 			url: 'login',
 			method: 'POST',
@@ -31,12 +32,14 @@ class Login extends React.Component
 				errorMessage: '',
 				errors: {}
 			});
+			$('#overlay').removeClass('active');
 			Auth.authenticateUser(data.token);
 			browserHistory.push('/services');
 		})
 		.fail(function(data)
 		{
 			console.log(data);
+			$('#overlay').removeClass('active');
 			self.setState({
 				errorMessage: data.responseJSON.message,
 				errors: data.responseJSON.errors

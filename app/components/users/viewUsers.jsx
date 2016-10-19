@@ -15,6 +15,7 @@ class viewUsers extends React.Component
 	{
 		var host = this.props.route.host;
 		var _this = this;
+		$('#overlay').addClass('active');
 		$.ajax({
 			url: host+'users',
 			method: "GET",
@@ -25,6 +26,7 @@ class viewUsers extends React.Component
 			dataType: "json",
 			success: function(res)
 			{
+				$('#overlay').removeClass('active');
 				_this.setState({
 					users: res
 				});

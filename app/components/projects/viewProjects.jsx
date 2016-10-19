@@ -15,6 +15,7 @@ class viewProjects extends React.Component
 	{
 		var host = this.props.route.host;
 		var _this = this;
+		$('#overlay').removeClass('active');
 		$.ajax({
 			url: host+'proyects',
 			method: "GET",
@@ -25,6 +26,7 @@ class viewProjects extends React.Component
 			dataType: "json",
 			success: function(res)
 			{
+				$('#overlay').removeClass('active');
 				_this.setState({
 					projects: res
 				});
