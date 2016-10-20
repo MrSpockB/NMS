@@ -15,7 +15,7 @@ class addProject extends React.Component
 			errors: {},
 			rootStruct: {},
 			cursor: {},
-			tempLang: '',
+			tempLang: 'PHP',
 			tempProg: '',
 			users : []
 		};
@@ -56,7 +56,8 @@ class addProject extends React.Component
 			success: function(res)
 			{
 				_this.setState({
-					users: res
+					users: res,
+					tempProg: res[0]
 				});
 			}
 		});
