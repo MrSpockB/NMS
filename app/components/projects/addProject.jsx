@@ -57,7 +57,7 @@ class addProject extends React.Component
 			{
 				_this.setState({
 					users: res,
-					tempProg: res[0]
+					tempProg: res[0].username
 				});
 			}
 		});

@@ -40,7 +40,7 @@ const router = (
 			<Route path="users">
 				<IndexRoute component={viewUsers} host={host} />
 				<Route path="add" component={addUser} host={host}/>
-				<Route path=":id/edit" component={editUser}/>
+				<Route path=":id/edit" component={editUser} host={host}/>
 			</Route>
 		</Route>
 	</Router>

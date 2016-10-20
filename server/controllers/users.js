@@ -40,6 +40,18 @@ module.exports = {
 					res.json(user);
 				}
 			});
+		},
+		put: function(req, res, next)
+		{
+			User.findOneAndUpdate({_id: req.params.userId}, req.body, function(err, user) {
+		        if (err) 
+		            return next(err);       
+		        else 
+		        {
+		        	user.save();
+		            res.json(user);       
+		        }
+		    });
 		}
 	}
 };

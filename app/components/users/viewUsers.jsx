@@ -45,7 +45,6 @@ class viewUsers extends React.Component
 							<th>Username</th>
 							<th>Email</th>
 							<th>Modificar</th>
-							<th>Eliminar</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -56,14 +55,9 @@ class viewUsers extends React.Component
 									<td>{user.username}</td>
 									<td>{user.email}</td>
 									<td>
-										<Link to={'/users/'+user.id+'/edit'} className="ui icon blue button">
+										<Link to={'/users/'+user._id+'/edit'} className="ui icon blue button">
 											<i className="setting icon"></i>
 										</Link>
-									</td>
-									<td>
-										<button className="ui icon red button">
-											<i className="remove icon"></i>
-										</button>
 									</td>
 								</tr>
 							);

@@ -15,7 +15,7 @@ module.exports = function()
 
 	app.use(express.static(path.resolve('./server/static/')));
 	app.use(express.static(path.resolve('./app/')));
-	app.use(express.static(path.resolve('./semantic/dist/')));
+	//app.use(express.static(path.resolve('./semantic/dist/')));
 
 
 	app.use(bodyParser.urlencoded({ extended: true }));

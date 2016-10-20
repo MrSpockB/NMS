@@ -34,7 +34,7 @@ class Login extends React.Component
 			});
 			$('#overlay').removeClass('active');
 			Auth.authenticateUser(data.token);
-			browserHistory.push('/services');
+			browserHistory.push('/projects');
 		})
 		.fail(function(data)
 		{
