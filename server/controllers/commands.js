@@ -1,5 +1,6 @@
 var fs = require('fs'),
-    path = require('path');
+    path = require('path'),
+    os = require('os');
 var spawn = require('child_process').spawn;
 var config = require('./../config/config');
 
@@ -36,9 +37,13 @@ module.exports =
 	{
 		post: function(req, res, next)
 		{
-			console.log(req.body.directory);
+			var resPath = req.body.path.replace(config.rootPath, '');
+			if (resPath.substring(0, 1) == '\\') { 
+			  resPath = resPath.substring(1);
+			}
+			resPath = config.rootPath + path.sep + resPath + path.sep + req.body.directory;
 			var success, message;
-			fs.mkdir(config.rootPath+'\\'+req.body.directory, 0777, function(err)
+			fs.mkdir(resPath, 0777, function(err)
 			{
 				if(err)
 				{
@@ -55,7 +60,7 @@ module.exports =
 					message = "Se creo la carpeta";
 				}
 				res.json({success: success, msg: message});
-			})
+			});
 		}
 	}
 }
@@ -70,7 +75,7 @@ function dirTree(filename)
     if (stats.isDirectory()) {
         info.type = "folder";
         info.children = fs.readdirSync(filename).map(function(child) {
-            return dirTree(filename + '\\' + child);
+            return dirTree(filename + path.sep + child);
         });
     } else {
         info.type = "file";

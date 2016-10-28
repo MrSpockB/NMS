@@ -25,17 +25,29 @@ module.exports = {
 					return next(err);
 				else
 				{
-					var npm = spawn('npm',['init', '-y'], {cwd: proyect.route,  shell: true});
+					var init;
+					if(proyect.language === "Javascript")
+					{
+						init = spawn('npm',['init', '-y'], {cwd: proyect.route,  shell: true});
+					}
+					else if( proyect.language === "PHP")
+					{
+						init = spawn('composer',['init', '-n'], {cwd: proyect.route,  shell: true});
+					}
+					else
+					{
+						init = spawn('npm',['init', '-y'], {cwd: proyect.route,  shell: true});
+					}
 					var result = '';
-					npm.stdout.on('data', (data) => {
+					init.stdout.on('data', (data) => {
 						result += data.toString();
 					});
-					npm.on('close', (code) => {
+					init.on('close', (code) => {
 						//console.log(result);
 						res.json(proyect);
 					  	console.log(`child process exited with code ${code}`);
 					})
-					npm.on('error', function(err){
+					init.on('error', function(err){
 						throw err;
 					})
 				}
@@ -106,49 +118,57 @@ module.exports = {
 					var deps = [];
 					var devDeps = [];
 					var obj = { name: '', version: '' };
-					fs.readFile(proyect.route+'/package.json', function(err, data){
-						if(err)
-							next(err);
-						obj = JSON.parse(data);
-						if(obj["dependencies"] !== undefined)
+					if(proyect.language === "Javascript")
+					{
+						fs.readFile(proyect.route+'/package.json', function(err, data)
 						{
-							Object.keys(obj["dependencies"]).forEach(function(el){
-								deps.push({ name: el, version: obj["dependencies"][el]});
-							});
-						}
-						if(obj["devDependencies"] !== undefined)
-						{	
-							Object.keys(obj["devDependencies"]).forEach(function(el){
-								devDeps.push({ name: el, version: obj["devDependencies"][el]});
-							});
-						}
-						finalData["deps"] = deps;
-						finalData["devDeps"] = devDeps;
-						res.json(finalData);
-					});
+							if(err)
+								next(err);
+							obj = JSON.parse(data);
+							if(obj["dependencies"] !== undefined)
+							{
+								Object.keys(obj["dependencies"]).forEach(function(el){
+									deps.push({ name: el, version: obj["dependencies"][el]});
+								});
+							}
+							if(obj["devDependencies"] !== undefined)
+							{	
+								Object.keys(obj["devDependencies"]).forEach(function(el){
+									devDeps.push({ name: el, version: obj["devDependencies"][el]});
+								});
+							}
+							finalData["deps"] = deps;
+							finalData["devDeps"] = devDeps;
+							res.json(finalData);
+						});
+					}
+					else if( proyect.language === "PHP")
+					{
+						fs.readFile(proyect.route+'/composer.json', function(err, data)
+						{
+							if(err)
+								next(err);
+							obj = JSON.parse(data);
+							if(obj.hasOwnProperty('require'))
+							{
+								for(var key in obj['require'])
+								{
+									deps.push({ name: key, version: obj["require"][key]});
+								}
+							}
+							if(obj.hasOwnProperty('require-dev'))
+							{
+								for(var key in obj['require-dev'])
+								{
+									devDeps.push({ name: key, version: obj["require-dev"][key]});
+								}
+							}
+							finalData["deps"] = deps;
+							finalData["devDeps"] = devDeps;
+							res.json(finalData);
+						});
+					}
 				}
-			});
-		},
-		post: function(req, res, next)
-		{
-			Proyect.findOne({
-				_id: req.params.proyectId
-			},
-			function(err, proyect)
-			{
-				var result = "";
-				var npm = spawn('npm',['install', req.body.package, '--save'], {cwd: proyect.route,  shell: true});
-				npm.stdout.on('data', (data) => {
-					result += data.toString();
-				});
-				npm.on('close', (code) => {
-					console.log(result);
-					res.json({success: true});
-				  	console.log(`child process exited with code ${code}`);
-				});
-				npm.on('error', function(err){
-					res.json({success: false, err: err.message});
-				});
 			});
 		}
 	},
@@ -178,7 +198,7 @@ function dirTree(filename, level)
     if (stats.isDirectory() && level > 0) {
         info.type = "folder";
         info.children = fs.readdirSync(filename).map(function(child) {
-            return dirTree(filename + '\\' + child, level-1);
+            return dirTree(filename + path.sep + child, level-1);
         });
     } else {
         info.type = "file";

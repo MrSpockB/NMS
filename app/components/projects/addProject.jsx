@@ -24,6 +24,7 @@ class addProject extends React.Component
 	{
 		var host = this.props.route.host;
 		var _this = this;
+		$('#overlay').addClass('active');
 		$.ajax({
 			url: host+'commands/root/',
 			method: "GET",
@@ -34,6 +35,7 @@ class addProject extends React.Component
 			dataType: "json",
 			success: function(res)
 			{
+				$('#overlay').removeClass('active');
 				_this.setState({
 					rootStruct: res
 				});
@@ -45,6 +47,7 @@ class addProject extends React.Component
 		var host = this.props.route.host;
 		var _this = this;
 		this.fetchRootDirectory();
+		$('#overlay').addClass('active');
 		$.ajax({
 			url: host+'users',
 			method: "GET",
@@ -55,6 +58,7 @@ class addProject extends React.Component
 			dataType: "json",
 			success: function(res)
 			{
+				$('#overlay').removeClass('active');
 				_this.setState({
 					users: res,
 					tempProg: res[0].username
@@ -86,6 +90,7 @@ class addProject extends React.Component
 			username: this.state.tempProg,
 			route: this.state.cursor.path
 		};
+		$('#overlay').addClass('active');
 		$.ajax({
 			url: host+'proyects',
 			method: "POST",
@@ -97,6 +102,7 @@ class addProject extends React.Component
 			dataType: "json",
 			success: function(res)
 			{
+				$('#overlay').removeClass('active');
 				_this.setState({
 					successMessage: res
 				});
@@ -117,11 +123,12 @@ class addProject extends React.Component
 		event.preventDefault();
 		var direc = this.refs.carpeta.value;
 		var host = this.props.route.host;
+		var path = this.state.cursor.path;
 		var _this = this;
 		console.log(direc);
 		$.ajax({
 			url: host+'commands/makedir/',
-			data: {directory: direc },
+			data: {directory: direc, path: path },
 			method: "POST",
 			headers: {
 				'Content-type': 'application/x-www-form-urlencoded',
