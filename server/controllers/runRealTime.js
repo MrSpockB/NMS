@@ -21,7 +21,6 @@ module.exports = function(io)
 			{
 				var env = process.env;
 				env["PORT"] = data.port;
-				console.log(process.env);
 				node = spawn('node', [data.name], {cwd: proyect.route, env: env});
 				node.stdout.on('data', (data) => {
 					var result = data.toString();
@@ -60,6 +59,9 @@ module.exports = function(io)
 						console.log(result);
 						io.emit('packageInstallOutput', result);
 					});
+					npm.on('close', function(code){
+						io.emit('packageInstallOutput', code);	
+					});
 				}
 				else if(proyect.language === "PHP")
 				{
@@ -75,6 +77,9 @@ module.exports = function(io)
 						var result = err.message;
 						console.log(result);
 						io.emit('packageInstallOutput', result);
+					});
+					composer.on('close', function(code){
+						io.emit('packageInstallOutput', code);	
 					});
 				}
 			});

@@ -186,7 +186,7 @@ class runProject extends React.Component
 				<ul id="shellOutput">
 					{this.state.output.map(function(line){
 						return(
-							<li>{line}</li>
+							<pre>{line}</pre>
 						);
 					})}
 				</ul>
@@ -272,7 +272,7 @@ class runProject extends React.Component
 					<ul id="packageInstallOutput">
 						{this.state.packageInstallOutput.map(function(line){
 							return(
-								<li>{line}</li>
+								<pre>{line}</pre>
 							);
 						})}
 					</ul>
