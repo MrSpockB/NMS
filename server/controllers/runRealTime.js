@@ -1,7 +1,7 @@
 var Proyect = require('mongoose').model('Proyect');
 var fs = require('fs');
 var spawn = require('child_process').spawn;
-var node;
+var runProject;
 
 module.exports = function(io)
 {
@@ -19,19 +19,25 @@ module.exports = function(io)
 			},
 			function(err, proyect)
 			{
-				var env = process.env;
-				env["PORT"] = data.port;
-				node = spawn('node', [data.name], {cwd: proyect.route, env: env});
-				node.stdout.on('data', (data) => {
-					var result = data.toString();
-					console.log(result);
-					io.emit('shellOutput', result);
-				});
+				if(proyect.language === "Javascript")
+				{
+					var env = process.env;
+					env["PORT"] = data.port;
+					runProject = spawn('node', [data.name], {cwd: proyect.route, env: env, shell: true});
+					runProject.stdout.on('data', (d) => {
+						var result = d.toString();
+						console.log(result);
+						io.emit('shellOutput', result);
+					});
+					runProject.stderr.on('data', (d) => {
+					 	console.log(`stderr: ${d}`);
+					});
+				}
 			});
 		});
 		socket.on('stopProject',function()
 		{
-			node.kill('SIGINT');
+			runProject.kill('SIGINT');
 			console.log('stop');
 		});
 		socket.on('installPackage', function(data)

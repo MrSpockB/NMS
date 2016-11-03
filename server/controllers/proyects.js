@@ -32,7 +32,8 @@ module.exports = {
 					}
 					else if( proyect.language === "PHP")
 					{
-						init = spawn('composer',['init', '-n'], {cwd: proyect.route,  shell: true});
+						spawn('composer',['init', '-n'], {cwd: proyect.route,  shell: true});
+						init = spawn('addAlias',[proyect.route, proyect.name], {shell: true});
 					}
 					else
 					{
