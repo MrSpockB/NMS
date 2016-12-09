@@ -12,13 +12,11 @@ import addProject from './components/projects/addProject.jsx';
 import editDetailsProject from './components/projects/editDetailsProject.jsx';
 import runProject from './components/projects/runProject.jsx';
 
-import viewServices from './components/services/viewServices.jsx';
-import addService from './components/services/addService.jsx';
-import editDetailsService from './components/services/editDetailsService.jsx';
-
 import viewUsers from './components/users/viewUsers.jsx';
 import addUser from './components/users/addUser.jsx';
 import editUser from './components/users/editUser.jsx';
+
+import consola from './components/consola.jsx';
 
 const host = "http://bananapi.nms.com/api/";
 
@@ -26,11 +24,6 @@ const router = (
 	<Router history={browserHistory}>
 		<Route path="/" component={Login} />
 		<Route component={MainLayout} >
-			<Route path="services">
-				<IndexRoute component={viewServices} host={host} />
-				<Route path="add" component={addService} host={host}/>
-				<Route path=":id/edit" component={editDetailsService} />
-			</Route>
 			<Route path="projects">
 				<IndexRoute component={viewProjects} host={host} />
 				<Route path="add" component={addProject} host={host} />
@@ -42,6 +35,7 @@ const router = (
 				<Route path="add" component={addUser} host={host}/>
 				<Route path=":id/edit" component={editUser} host={host}/>
 			</Route>
+			<Route path="consola" component={consola} host={host} />
 		</Route>
 	</Router>
 )

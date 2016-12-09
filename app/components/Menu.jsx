@@ -15,18 +15,6 @@ class Menu extends React.Component
 				<div className="ui styled accordion" ref="latMenu">
 					<div className="title">
 						<i className="dropdown icon"></i>
-						Servicios
-					</div>
-					<div className="content">
-						<div className="transition hidden">
-							<div className="ui secondary vertical menu">
-								<Link to="/services" className="item" activeClassName="active">Ver todos los servicios</Link>
-								<Link to="/services/add" className="item" activeClassName="active">Agregar servicio</Link>
-							</div>
-						</div>
-					</div>
-					<div className="title">
-						<i className="dropdown icon"></i>
 						Proyectos
 					</div>
 					<div className="content">
@@ -46,6 +34,17 @@ class Menu extends React.Component
 							<div className="ui secondary vertical menu">
 								<Link to="/users" className="item" activeClassName="active">Ver todos los usuarios</Link>
 								<Link to="/users/add" className="item" activeClassName="active">Agregar usuario</Link>
+							</div>
+						</div>
+					</div>
+					<div className="title">
+						<i className="dropdown icon"></i>
+						Utilidades
+					</div>
+					<div className="content">
+						<div className="transition hidden">
+							<div className="ui secondary vertical menu">
+								<Link to="/consola" className="item" activeClassName="active">Consola</Link>
 							</div>
 						</div>
 					</div>

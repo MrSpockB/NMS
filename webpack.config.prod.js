@@ -3,7 +3,7 @@ var path = require('path');
 var WebpackNotifierPlugin = require('webpack-notifier');
 
 module.exports = {
-        devtool: 'source-map',
+        devtool: 'cheap-module-source-map',
         entry: __dirname + '/app/index.jsx',
         output: {
                 path: __dirname + '/app/dist',
@@ -12,9 +12,9 @@ module.exports = {
         plugins: [
                 new webpack.optimize.OccurenceOrderPlugin(),
                 new webpack.DefinePlugin({
-                        'process.env': {
-                                'NODE_ENV': "'production'"
-                        }
+                    'process.env': {
+                      'NODE_ENV': JSON.stringify('production')
+                    }
                 }),
                 new webpack.optimize.UglifyJsPlugin({
                         compressor: {
@@ -35,6 +35,10 @@ module.exports = {
                 {
                         test: /\.less$/,
                         loader: 'style!css!less'
+                },
+                {
+                  test: /\.css$/,
+                  loader: 'style!css'
                 }
                 ]
         }

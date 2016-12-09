@@ -36,6 +36,22 @@ class viewProjects extends React.Component
 	}
 	render()
 	{
+		var element;
+		if(this.state.projects === undefined || this.state.projects.length == 0)
+		{
+			element = (<h2 className="ui icon center aligned header segment">
+						  <i className="settings icon"></i>
+						  <div className="content">
+						    No hay proyectos
+						    <div className="sub header">Agrega proyectos para poder configurarlos.</div>
+						  </div>
+						</h2>
+			);
+		}
+		else
+		{
+			element = "";
+		}
 		return(
 			<div>
 				<h1>Proyectos</h1>
@@ -71,6 +87,7 @@ class viewProjects extends React.Component
 						})}
 					</tbody>
 				</table>
+				{element}
 			</div>
 		)
 	}

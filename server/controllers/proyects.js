@@ -26,31 +26,62 @@ module.exports = {
 				else
 				{
 					var init;
+					var result = '';
 					if(proyect.language === "Javascript")
 					{
-						init = spawn('npm',['init', '-y'], {cwd: proyect.route,  shell: true});
+						fs.access(proyect.route+path.sep+'package.json', fs.F_OK, function(err) 
+						{
+						    if (!err)
+						    {
+						    	console.log("Existe package.json");
+						    	res.json(proyect);
+						    }
+						    else
+						    {
+						    	console.log("No existe package.json");
+						        init = spawn('npm',['init', '-y'], {cwd: proyect.route,  shell: true});
+						        init.stdout.on('data', (data) => {
+						        	result += data.toString();
+						        });
+						        init.on('close', (code) => {
+						        	//console.log(result);
+						        	res.json(proyect);
+						          	console.log(`child process exited with code ${code}`);
+						        });
+						        init.on('error', function(err){
+						        	throw err;
+						        });
+						    }
+						});
 					}
 					else if( proyect.language === "PHP")
 					{
-						spawn('composer',['init', '-n'], {cwd: proyect.route,  shell: true});
-						init = spawn('addAlias',[proyect.route, proyect.name], {shell: true});
+						fs.access(proyect.route+path.sep+'composer.json', fs.F_OK, function(err) 
+						{
+						    if (!err)
+						    {
+						    	console.log("Existe composer.json");
+						        res.json(proyect);
+						    }
+						    else
+						    {
+						    	console.log("No existe composer.json");
+						        spawn('composer',['init', '-n'], {cwd: proyect.route,  shell: true});
+						    }
+						});
+						init = spawn('addAlias.py',[proyect.route, proyect.name], {shell: true});
+						init.stdout.on('data', (data) => {
+							result += data.toString();
+						});
+						init.on('close', (code) => {
+							//console.log(result);
+							res.json(proyect);
+						  	console.log(`child process exited with code ${code}`);
+						});
+						init.on('error', function(err){
+							throw err;
+						});
 					}
-					else
-					{
-						init = spawn('npm',['init', '-y'], {cwd: proyect.route,  shell: true});
-					}
-					var result = '';
-					init.stdout.on('data', (data) => {
-						result += data.toString();
-					});
-					init.on('close', (code) => {
-						//console.log(result);
-						res.json(proyect);
-					  	console.log(`child process exited with code ${code}`);
-					})
-					init.on('error', function(err){
-						throw err;
-					})
 				}
 			});
 		}

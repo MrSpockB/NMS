@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { findDOMNode } from 'react-dom';
 import Auth from './../../modules/Auth';
+import Console from 'react-console-component';
 import { Treebeard } from 'react-treebeard';
 
 class runProject extends React.Component
@@ -84,20 +85,31 @@ class runProject extends React.Component
 				});
 			}
 		});
-		this.socket = io.connect('http://localhost:5000');
+		this.socket = io.connect('http://bananapi.nms.com:5000');
 		this.socket.on('shellOutput', function(outputData)
 		{
 			var arrayvar = _this.state.output.slice()
 			arrayvar.push(outputData)
 			_this.setState({ output: arrayvar })
-		})
+		});
 		this.socket.on('packageInstallOutput', function(outputData)
 		{
-			$('#overlay').removeClass('active');
-			var arrayvar = _this.state.output.slice()
+			var arrayvar = _this.state.packageInstallOutput.slice()
 			arrayvar.push(outputData)
 			_this.setState({packageInstallOutput: arrayvar});
-		})
+		});
+		this.socket.on('finishInstallOutput', function(outputData)
+		{
+			$('#overlay').removeClass('active');
+		});
+		this.socket.on('cmdOutput', function(outputData)
+		{
+			_this.refs.console.log(outputData);
+		});
+		this.socket.on('cmdFinish', function(outputData)
+		{
+			_this.refs.console.return();
+		});
 	}
 	onToggle = (node, toggled) =>
 	{
@@ -115,30 +127,9 @@ class runProject extends React.Component
 	installPackage = (event) => {
 		event.preventDefault();
 		var data = {id: this.props.params.id, package: this.refs.pkgToSearch.value, dev: this.state.dev}
+		this.setState({ packageInstallOutput: [] });
 		$('#overlay').addClass('active');
 		this.socket.emit('installPackage', data);
-		// var pkg = this.refs.pkgToSearch.value;
-		// var host = this.props.route.host;
-		// var id = this.props.params.id;
-		// var _this = this;
-		// console.log(pkg);
-		// $.ajax({
-		// 	url: host+'proyects/view/'+id+'/packages',
-		// 	data: {package: pkg },
-		// 	method: "POST",
-		// 	headers: {
-		// 		'Content-type': 'application/x-www-form-urlencoded',
-		// 		'Authorization': 'bearer ' + Auth.getToken(),
-		// 	},
-		// 	dataType: "json",
-		// 	success: function(res)
-		// 	{
-		// 		if(res.success)
-		// 		{
-		// 			console.log(res);
-		// 		}
-		// 	}
-		// });
 	}
 	updatePort = (event) =>
 	{
@@ -159,6 +150,15 @@ class runProject extends React.Component
 	{
 		event.preventDefault();
 		this.socket.emit('stopProject');
+	}
+	uninstallPackage = (event, name, dev) =>
+	{
+		console.log(event, name);
+	}
+	echo = (text) =>
+	{
+		console.log(text);
+		this.socket.emit('runCmdInProyectRoute', {cmd: text, route: this.state.proyect.route});
 	}
 	render()
 	{
@@ -199,6 +199,7 @@ class runProject extends React.Component
 					{ menuItem }
 				  	<a className="item" data-tab="second">Listar paquetes</a>
 				  	<a className="item" data-tab="third">Instalar paquete</a>
+				  	<a className="item" data-tab="four">Consola</a>
 				</div>
 				{ container }
 				<div className="ui bottom attached tab segment" data-tab="second">
@@ -220,12 +221,12 @@ class runProject extends React.Component
 				  						<td>{pkg.version}</td>
 				  						<td>
 				  							<button className="ui icon red button">
-				  								<i className="remove icon"></i>
+				  								<i className="remove icon" onClick={this.uninstallPackage.bind(this, pkg.name, 'no-dev')}></i>
 				  							</button>
 				  						</td>
 				  					</tr>
 				  				);
-				  			})}
+				  			}, this)}
 				  		</tbody>
 				  	</table>
 				  	<hr/>
@@ -246,12 +247,12 @@ class runProject extends React.Component
 				  						<td>{pkg.version}</td>
 				  						<td>
 				  							<button className="ui icon red button">
-				  								<i className="remove icon"></i>
+				  								<i className="remove icon" onClick={this.uninstallPackage.bind(this, pkg.name, 'dev')}></i>
 				  							</button>
 				  						</td>
 				  					</tr>
 				  				);
-				  			})}
+				  			}, this)}
 				  		</tbody>
 				  	</table>
 				</div>
@@ -276,6 +277,9 @@ class runProject extends React.Component
 							);
 						})}
 					</ul>
+				</div>
+				<div className="ui bottom attached tab segment" data-tab="four">
+					<Console ref="console" handler={this.echo} autofocus={true} />
 				</div>
 			</div>
 		);

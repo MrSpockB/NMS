@@ -159,7 +159,6 @@ class addProject extends React.Component
 						<select name="lenguaje" value={this.state.tempLang} onChange={this.updateLang} className="ui dropdown">
 							<option value="PHP">PHP</option>
 							<option value="Javascript">Javascript</option>
-							<option value="Ruby">Ruby</option>
 						</select>
 					</div>
 					<div className="field">
